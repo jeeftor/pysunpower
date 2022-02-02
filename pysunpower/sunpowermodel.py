@@ -4,6 +4,7 @@ from typing import List, Union
 
 from pydantic import BaseModel
 
+
 class SupervisorModel(BaseModel):
     DETAIL: str
     STATE: str
@@ -25,6 +26,7 @@ class SupervisorModel(BaseModel):
     dl_flash_avail: str
     panid: int
     CURTIME: str
+
 
 class ProductionModel(BaseModel):
     ISDETAIL: bool
@@ -51,6 +53,7 @@ class ProductionModel(BaseModel):
     origin: str
     OPERATION: str
     CURTIME: str
+
 
 class ConsumptionModel(BaseModel):
     ISDETAIL: bool
@@ -87,6 +90,7 @@ class ConsumptionModel(BaseModel):
     OPERATION: str
     CURTIME: str
 
+
 class TypeGInverterModel(BaseModel):
     ISDETAIL: bool
     SERIAL: str
@@ -121,7 +125,10 @@ class TypeGInverterModel(BaseModel):
     CURTIME: str
 
 
-
-class DeviceModel(BaseModel):
-    devices: List[Union[SupervisorModel, ProductionModel, ConsumptionModel, TypeGInverterModel]]
+class SunPowerModel(BaseModel):
+    """The Base SunPower Device List REST Api definition."""
+    # pydantic will attempt to match list items according to the order shown in the Union
+    # listing the items in this order ensures correct JSON conversion as ConsumptionModel
+    # is more specific than ProductionModel
+    devices: List[Union[SupervisorModel, ConsumptionModel, ProductionModel, TypeGInverterModel]]
     result: str
