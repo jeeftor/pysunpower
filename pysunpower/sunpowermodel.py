@@ -15,15 +15,15 @@ class SupervisorModel(BaseModel):
     SWVER: str
     DEVICE_TYPE: str
     DATATIME: str
-    dl_err_count: str
-    dl_comm_err: str
-    dl_skipped_scans: str
-    dl_scan_time: str
-    dl_untransmitted: str
-    dl_uptime: str
-    dl_cpu_load: str
-    dl_mem_used: str
-    dl_flash_avail: str
+    dl_err_count: int
+    dl_comm_err: int
+    dl_skipped_scans: int
+    dl_scan_time: int
+    dl_untransmitted: int
+    dl_uptime: int
+    dl_cpu_load: float
+    dl_mem_used: int
+    dl_flash_avail: int
     panid: int
     CURTIME: str
 
@@ -42,13 +42,13 @@ class ProductionModel(BaseModel):
     SWVER: str
     PORT: str
     DATATIME: str
-    ct_scl_fctr: str
-    net_ltea_3phsum_kwh: str
-    p_3phsum_kw: str
-    q_3phsum_kvar: str
-    s_3phsum_kva: str
-    tot_pf_rto: str
-    freq_hz: str
+    ct_scl_fctr: float
+    net_ltea_3phsum_kwh: float
+    p_3phsum_kw: float
+    q_3phsum_kvar: float
+    s_3phsum_kva: float
+    tot_pf_rto: float
+    freq_hz: float
     CAL0: str
     origin: str
     OPERATION: str
@@ -69,22 +69,22 @@ class ConsumptionModel(BaseModel):
     SWVER: str
     PORT: str
     DATATIME: str
-    ct_scl_fctr: str
-    net_ltea_3phsum_kwh: str
-    p_3phsum_kw: str
-    q_3phsum_kvar: str
-    s_3phsum_kva: str
-    tot_pf_rto: str
-    freq_hz: str
-    i1_a: str
-    i2_a: str
-    v1n_v: str
-    v2n_v: str
-    v12_v: str
-    p1_kw: str
-    p2_kw: str
-    neg_ltea_3phsum_kwh: str
-    pos_ltea_3phsum_kwh: str
+    ct_scl_fctr: float
+    net_ltea_3phsum_kwh: float
+    p_3phsum_kw: float
+    q_3phsum_kvar: float
+    s_3phsum_kva: float
+    tot_pf_rto: float
+    freq_hz: float
+    i1_a: float
+    i2_a: float
+    v1n_v: float
+    v2n_v: float
+    v12_v: float
+    p1_kw: float
+    p2_kw: float
+    neg_ltea_3phsum_kwh: float
+    pos_ltea_3phsum_kwh: float
     CAL0: str
     origin: str
     OPERATION: str
@@ -110,15 +110,15 @@ class TypeGInverterModel(BaseModel):
     MOD_SN: str
     NMPLT_SKU: str
     DATATIME: str
-    ltea_3phsum_kwh: str
-    p_3phsum_kw: str
-    vln_3phavg_v: str
-    i_3phsum_a: str
-    p_mppt1_kw: str
-    v_mppt1_v: str
-    i_mppt1_a: str
-    t_htsnk_degc: str
-    freq_hz: str
+    ltea_3phsum_kwh: float
+    p_3phsum_kw: float
+    vln_3phavg_v: float
+    i_3phsum_a: float
+    p_mppt1_kw: float
+    v_mppt1_v: float
+    i_mppt1_a: float
+    t_htsnk_degc: float
+    freq_hz: float
     stat_ind: str
     origin: str
     OPERATION: str
@@ -132,3 +132,19 @@ class SunPowerModel(BaseModel):
     # is more specific than ProductionModel
     devices: List[Union[SupervisorModel, ConsumptionModel, ProductionModel, TypeGInverterModel]]
     result: str
+
+    @property
+    def consumption(self) -> ConsumptionModel:
+        return self.devices[2]
+
+    @property
+    def production(self) -> ProductionModel:
+        return self.devices[1]
+
+    @property
+    def supervisor(self) -> SupervisorModel:
+        return self.devices[0]
+
+    @property
+    def inverters(self) -> [TypeGInverterModel]:
+        return self.devices[3:]
