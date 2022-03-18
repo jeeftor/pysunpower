@@ -1,11 +1,12 @@
+"""Define pydantic models for components."""
 from __future__ import annotations
-
-from typing import List, Union
 
 from pydantic import BaseModel
 
 
 class SupervisorModel(BaseModel):
+    """Supervisor model definition."""
+
     DETAIL: str
     STATE: str
     STATEDESCR: str
@@ -29,6 +30,8 @@ class SupervisorModel(BaseModel):
 
 
 class ProductionModel(BaseModel):
+    """Production model definition."""
+
     ISDETAIL: bool
     SERIAL: str
     TYPE: str
@@ -56,6 +59,8 @@ class ProductionModel(BaseModel):
 
 
 class ConsumptionModel(BaseModel):
+    """Define a consumption model (power meter)."""
+
     ISDETAIL: bool
     SERIAL: str
     TYPE: str
@@ -92,6 +97,8 @@ class ConsumptionModel(BaseModel):
 
 
 class TypeGInverterModel(BaseModel):
+    """Type G Inverter model - different models have slightly different charateristics."""
+
     ISDETAIL: bool
     SERIAL: str
     TYPE: str
@@ -127,24 +134,31 @@ class TypeGInverterModel(BaseModel):
 
 class SunPowerModel(BaseModel):
     """The Base SunPower Device List REST Api definition."""
+
     # pydantic will attempt to match list items according to the order shown in the Union
     # listing the items in this order ensures correct JSON conversion as ConsumptionModel
     # is more specific than ProductionModel
-    devices: List[Union[SupervisorModel, ConsumptionModel, ProductionModel, TypeGInverterModel]]
+    devices: list[
+        SupervisorModel | ConsumptionModel | ProductionModel | TypeGInverterModel
+    ]
     result: str
 
     @property
     def consumption(self) -> ConsumptionModel:
-        return self.devices[2]
+        """Return consumption device."""
+        return self.devices[2]  # type: ignore
 
     @property
     def production(self) -> ProductionModel:
-        return self.devices[1]
+        """Return production device."""
+        return self.devices[1]  # type: ignore
 
     @property
     def supervisor(self) -> SupervisorModel:
-        return self.devices[0]
+        """Return Supervisor Device."""
+        return self.devices[0]  # type: ignore
 
     @property
-    def inverters(self) -> [TypeGInverterModel]:
-        return self.devices[3:]
+    def inverters(self) -> list[TypeGInverterModel]:
+        """Return inverters."""
+        return self.devices[3:]  # type: ignore
